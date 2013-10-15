@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+	<style>
+		#controls {
+			float: left;
+			width: 250px;
+		}
+
+		#lifeContainer {
+			float: left;
+		}
+	</style>
+</head>
+<body>
+	<div id="controls">
+		<h4>Controls</h4>
+		<label>Rows</label>
+		<input id="rowInput" type="text" placeholder="Number of rows...">
+		<label>Cols</label>
+		<input id="colInput" type="text" placeholder="Number of cols...">
+		<label>Radius</label>
+		<input id="radiusInput" type="text" placeholder="Cell radius...">
+		<button id="start" class="btn btn-primary">Start!</button>
+		<button id="stop" class="btn btn-danger">Stop</button>
+		<button id="reset" class="btn btn-success">Reset</button>
+	</div>
+	<div id="lifeContainer">
+
+	</div>
+</body>
+<script src="js/jquery-recent.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/d3.min.js"></script>
+<script src="js/cell.js"></script>
+<script src="js/world.js"></script>
+<script src="js/main.js"></script>
+</html>
