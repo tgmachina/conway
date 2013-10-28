@@ -1,4 +1,5 @@
 $(function(){
+	//Closure to hold simulation data
 	var sim = (function(){
 		var world = undefined;
 		var worldAttrs = {};
@@ -38,6 +39,7 @@ $(function(){
 		var numRows  = parseInt($('#rowInput').val());
 		var numCols  = parseInt($('#colInput').val());
 		var radius   = parseInt($('#radiusInput').val());
+		var speed  = parseInt($('#speedInput').val());
 		wAttrs.numRows = numRows;
 		wAttrs.numCols = numCols;
 		wAttrs.radius = radius;
@@ -48,7 +50,7 @@ $(function(){
 			w = reset(null, numRows, numCols, radius);
 		}
 		if(!w.scenario){
-			w.run();
+			w.run(speed);
 		}
 	}
 
