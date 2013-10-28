@@ -33,6 +33,8 @@ World.prototype.initializeGrid = function(){
 };
 
 World.prototype.seedGrid = function(seeder){
+	//Provide an interface to input a custom seeder and default
+	//to a simple mechanism for seeding the initial grid 
 	if(typeof seeder === 'undefined') {
 		seeder = function(){
 			return (Math.floor(Math.random()*100) < 40);
@@ -51,6 +53,8 @@ World.prototype.seedGrid = function(seeder){
 };
 
 World.prototype.seedFromTupleList = function(tuples){
+	//Allow seeding from a preconfigured list of points. Useful
+	//for seeding the map with common conway shapes (gliders, etc)
 	for(var tuple in tuples){
 		var point = tuples[tuple];
 		console.log(point);
@@ -63,11 +67,11 @@ World.prototype.seedFromTupleList = function(tuples){
  */
 
 World.prototype.printGridToConsole = function(){
+	//Utility method for when the SVG doesn't work
 	var textGrid = '';
 	for(var r=0; r < this.rows; r++){
 		var row = '';
 		for(var c=0; c < this.cols; c++){
-			//Defaults to all cells living, requires a random see function to randomize the board
 			row += this.grid[r][c].isAlive() ? 'o' : ' ';
 		}
 		textGrid += row + '\n';
@@ -96,11 +100,15 @@ World.prototype.createSVGData = function(){
 			currColLen += colOffset;
 			var currCell = this.grid[r][c];
 			if(currCell.isAlive()){
+				//Load the current, living cells attributes along with 
+				//positioning information so that D3 can properly render
+				//the set to SVG
 				data.push({
 					x: currColLen,
 					y: currRowLen,
 					r: this.radius,
-				 	v: currColLen + "i + " + currRowLen + "j", // + currCell.getLifespan(),
+					//Unique "vector" notation 
+				 	v: currColLen + "i + " + currRowLen + "j", 
 					lifeSpan: currCell.getLifespan()	
 				});
 			}
@@ -113,22 +121,26 @@ World.prototype.createSVGData = function(){
 
 World.prototype.draw = function(data){
 	var colors = ["blue", "green", "red", "pink", "orange", "purple"];
+	//D3 operates by joining sets of data as they're recomputed. By binding
+	//all circles to the data set, providing a unique key to identify them
+	//(d.v + d.lifeSpan), and finally defining enter and exit selections, D3
+	//will appropriately render each cell into the SVG--blazingly fast!
 	var circle = this.svg.selectAll("circle")
 			.data(data, function(d) { return d.v + d.lifeSpan; });
 
-		circle.enter()
-			.append("circle")
-			.attr("cx", function(d) { return d.x; })
-			.attr("cy", function(d) { return d.y; })
-			.attr("class", ".enter")
-			//.attr("r", 0)
-		//.transition()
-			.style("fill", function(d){ return colors[d.lifeSpan] || 'black' })
-			.attr("r", function(d) { return d.r; });
+	circle.enter()
+		.append("circle")
+		.attr("cx", function(d) { return d.x; })
+		.attr("cy", function(d) { return d.y; })
+		.attr("class", ".enter")
+		//.attr("r", 0)
+	//.transition()
+		.style("fill", function(d){ return colors[d.lifeSpan] || 'black' })
+		.attr("r", function(d) { return d.r; });
 
-		circle.exit()
-			.attr("r", 0)
-			.remove();
+	circle.exit()
+		.attr("r", 0)
+		.remove();
 };
 
 
@@ -156,6 +168,7 @@ World.prototype.getWorldData = function(metric){
 		for(var c = 0; c < this.cols; c++){
 			census[r][c] = {};
 			census[r][c].livingNeighbors = this.findLivingNeighbors(r,c);
+			//Later to be used to gather other stats on cells within the world
 			if(typeof metric === 'function'){
 				metric.apply(this, [census[r][c]]);
 			}
